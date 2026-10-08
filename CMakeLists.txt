@@ -331,6 +331,10 @@ file(GLOB kyty_emulator_src CONFIGURE_DEPENDS
 	"${KYTY_SOURCE_DIR}/loader/*.h"
 )
 
+if(LINUX)
+	set_property(SOURCE "${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderPrecompile.cpp" APPEND PROPERTY COMPILE_OPTIONS -fexceptions)
+endif()
+
 find_program(KYTY_GLSLANG_VALIDATOR glslangValidator REQUIRED)
 set(gpu_tiler_shader_dir "${KYTY_SOURCE_DIR}/graphics/host_gpu/shaders")
 set(gpu_tiler_generated_dir "${PROJECT_BINARY_DIR}/gpu_tiler_shaders")
@@ -718,6 +722,9 @@ add_executable(shader_precompile_tests EXCLUDE_FROM_ALL
 )
 target_link_libraries(shader_precompile_tests xxhash)
 target_include_directories(shader_precompile_tests PRIVATE ${inc_headers})
+if(LINUX)
+	set_property(SOURCE "${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderPrecompile.cpp" APPEND PROPERTY COMPILE_OPTIONS -fexceptions)
+endif()
 
 # KYTY_PIPELINE_FAST_FIRST: scheduling, retirement and accounting (pipeline/pipelineFastFirst.h).
 add_executable(pipeline_fast_first_tests EXCLUDE_FROM_ALL "${KYTY_TESTS_DIR}/PipelineFastFirstTests.cpp")

@@ -156,8 +156,12 @@ elseif(LINUX)
 				file(GLOB kyty_qt_plugin_group
 					"${kyty_qt_plugins_dir}/${kyty_qt_plugin}/*.so"
 					"${kyty_qt_plugins_dir}/${kyty_qt_plugin}/*.so.*")
+				# Skip plugins whose optional runtime deps (e.g. libheif, libjxr) are not installed.
+				list(FILTER kyty_qt_plugin_group EXCLUDE REGEX "kimg_(heif|jxr)")
 				list(APPEND kyty_qt_plugin_files ${kyty_qt_plugin_group})
-				install(DIRECTORY "${kyty_qt_plugins_dir}/${kyty_qt_plugin}" DESTINATION "plugins")
+				foreach(kyty_qt_plugin_file ${kyty_qt_plugin_group})
+					install(FILES "${kyty_qt_plugin_file}" DESTINATION "plugins/${kyty_qt_plugin}")
+				endforeach()
 			endif()
 		endforeach()
 		install(CODE "
